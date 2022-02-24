@@ -2,7 +2,7 @@ from pynvim import Nvim
 from pynvim_pp.keymap import Keymap
 from pynvim_pp.settings import Settings
 
-from ...registry import NAMESPACE, atomic, autocmd, rpc
+from ...registry import NAMESPACE, AUGROUPS, atomic, autocmd, rpc
 from ...shared.settings import KeyMapping
 from ..rt_types import Stack
 from ..state import state
@@ -27,7 +27,7 @@ def _update_pumheight(nvim: Nvim, stack: Stack) -> None:
 
 
 atomic.exec_lua(f"{NAMESPACE}.{_update_pumheight.name}()", ())
-autocmd("VimResized") << f"lua {NAMESPACE}.{_update_pumheight.name}()"
+AUGROUPS.append(autocmd("VimResized") << f"lua {NAMESPACE}.{_update_pumheight.name}()")
 
 
 def set_options(nvim: Nvim, mapping: KeyMapping, fast_close: bool) -> None:

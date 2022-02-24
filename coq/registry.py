@@ -5,7 +5,7 @@ from pynvim_pp.autocmd import AutoCMD
 from pynvim_pp.rpc import RPC
 
 NAMESPACE = "COQ"
-
+AUGROUPS = []
 
 def _name_gen(fn: Callable[[Callable[..., Any]], str]) -> str:
     return fn.__qualname__.lstrip("_").capitalize()

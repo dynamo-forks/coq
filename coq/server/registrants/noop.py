@@ -13,7 +13,7 @@ from std2.pickle.decoder import new_decoder
 from yaml import safe_load
 
 from ...consts import HELO_ARTIFACTS
-from ...registry import rpc
+from ...registry import AUGROUPS, atomic, rpc
 from ..rt_types import Stack
 
 
@@ -51,3 +51,10 @@ def now(nvim: Nvim, stack: Stack, args: Sequence[str]) -> None:
             encoded = encode(msg)
             stdout.buffer.write(encoded)
             stdout.buffer.flush()
+
+@rpc(blocking=True)
+def prestop(nvim: Nvim, stack: Stack, args: Sequence[str]) -> None:
+    for augroup in AUGROUPS:
+        atomic.command(f"augroup {augroup}")
+        atomic.command("autocmd!")
+        atomic.command("augroup END")

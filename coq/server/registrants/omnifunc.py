@@ -23,7 +23,7 @@ from std2.pickle.types import DecodeError
 
 from ...lsp.requests.command import cmd
 from ...lsp.requests.resolve import resolve
-from ...registry import NAMESPACE, atomic, autocmd, rpc
+from ...registry import NAMESPACE, AUGROUPS, atomic, autocmd, rpc
 from ...shared.runtime import Metric
 from ...shared.timeit import timeit
 from ...shared.types import Context, ExternLSP, ExternPath
@@ -252,4 +252,4 @@ def _comp_done(nvim: Nvim, stack: Stack, event: Mapping[str, Any]) -> None:
                 go(nvim, aw=cont())
 
 
-autocmd("CompleteDone") << f"lua {NAMESPACE}.{_comp_done.name}(vim.v.completed_item)"
+AUGROUPS.append(autocmd("CompleteDone") << f"lua {NAMESPACE}.{_comp_done.name}(vim.v.completed_item)")

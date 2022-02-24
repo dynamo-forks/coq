@@ -1,3 +1,4 @@
+import signal
 from argparse import ArgumentParser, Namespace
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import redirect_stderr, redirect_stdout
@@ -18,6 +19,7 @@ from textwrap import dedent
 from typing import Union
 
 from .consts import GIL_SWITCH, IS_WIN, REQUIREMENTS, RT_DIR, RT_PY, TOP_LEVEL, VARS
+from .registry import AUGROUPS
 
 setswitchinterval(min(getswitchinterval(), GIL_SWITCH))
 

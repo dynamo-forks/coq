@@ -8,7 +8,7 @@ from pynvim_pp.lib import async_call, awrite, go
 from std2.locale import si_prefixed_smol
 
 from ...lang import LANG
-from ...registry import NAMESPACE, atomic, autocmd, rpc
+from ...registry import NAMESPACE, AUGROUPS, atomic, autocmd, rpc
 from ...tmux.parse import snapshot
 from ...treesitter.request import async_request
 from ..rt_types import Stack
@@ -23,7 +23,7 @@ def _kill_float_wins(nvim: Nvim, stack: Stack) -> None:
             win_close(nvim, win=win)
 
 
-autocmd("WinEnter") << f"lua {NAMESPACE}.{_kill_float_wins.name}()"
+AUGROUPS.append(autocmd("WinEnter") << f"lua {NAMESPACE}.{_kill_float_wins.name}()")
 
 
 @rpc(blocking=True)
@@ -37,7 +37,7 @@ def _new_cwd(nvim: Nvim, stack: Stack) -> None:
     go(nvim, aw=cont())
 
 
-autocmd("DirChanged") << f"lua {NAMESPACE}.{_new_cwd.name}()"
+AUGROUPS.append(autocmd("DirChanged") << f"lua {NAMESPACE}.{_new_cwd.name}()")
 
 
 @rpc(blocking=True)
@@ -51,7 +51,7 @@ def _ft_changed(nvim: Nvim, stack: Stack) -> None:
     go(nvim, aw=cont())
 
 
-autocmd("FileType") << f"lua {NAMESPACE}.{_ft_changed.name}()"
+AUGROUPS.append(autocmd("FileType") << f"lua {NAMESPACE}.{_ft_changed.name}()")
 atomic.exec_lua(f"{NAMESPACE}.{_ft_changed.name}()", ())
 
 
@@ -81,7 +81,7 @@ def _insert_enter(nvim: Nvim, stack: Stack) -> None:
     go(nvim, aw=cont())
 
 
-autocmd("InsertEnter") << f"lua {NAMESPACE}.{_insert_enter.name}()"
+AUGROUPS.append(autocmd("InsertEnter") << f"lua {NAMESPACE}.{_insert_enter.name}()")
 
 
 @rpc(blocking=True)
@@ -93,7 +93,7 @@ def _on_focus(nvim: Nvim, stack: Stack) -> None:
     go(nvim, aw=cont())
 
 
-autocmd("FocusGained") << f"lua {NAMESPACE}.{_on_focus.name}()"
+AUGROUPS.append(autocmd("FocusGained") << f"lua {NAMESPACE}.{_on_focus.name}()")
 
 _HANDLE: Optional[Handle] = None
 
@@ -120,4 +120,4 @@ def _when_idle(nvim: Nvim, stack: Stack) -> None:
     )
 
 
-autocmd("CursorHold", "CursorHoldI") << f"lua {NAMESPACE}.{_when_idle.name}()"
+AUGROUPS.append(autocmd("CursorHold", "CursorHoldI") << f"lua {NAMESPACE}.{_when_idle.name}()")

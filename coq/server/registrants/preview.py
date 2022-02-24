@@ -48,7 +48,7 @@ from std2.string import removeprefix
 
 from ...lsp.requests.resolve import resolve
 from ...paths.show import show
-from ...registry import NAMESPACE, autocmd, rpc
+from ...registry import NAMESPACE, AUGROUPS, autocmd, rpc
 from ...shared.settings import GhostText, PreviewDisplay
 from ...shared.timeit import timeit
 from ...shared.trans import expand_tabs
@@ -98,7 +98,7 @@ def _kill_win(nvim: Nvim, stack: Stack, reset: bool) -> None:
         win_close(nvim, win=win)
 
 
-autocmd("CompleteDone", "InsertLeave") << f"lua {NAMESPACE}.{_kill_win.name}(true)"
+AUGROUPS.append(autocmd("CompleteDone", "InsertLeave") << f"lua {NAMESPACE}.{_kill_win.name}(true)")
 
 
 def _preprocess(context: Context, doc: Doc) -> Doc:
@@ -380,7 +380,7 @@ def _cmp_changed(nvim: Nvim, stack: Stack, event: Mapping[str, Any] = {}) -> Non
                 )
 
 
-autocmd("CompleteChanged") << f"lua {NAMESPACE}.{_cmp_changed.name}(vim.v.event)"
+AUGROUPS.append(autocmd("CompleteChanged") << f"lua {NAMESPACE}.{_cmp_changed.name}(vim.v.event)")
 
 
 @rpc(blocking=True, schedule=True)
